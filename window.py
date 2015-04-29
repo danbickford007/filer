@@ -9,8 +9,8 @@ class Window:
     top = Tkinter.Tk()
     self.set_top(top)
     self.set_text()
-    top.geometry('{}x{}'.format(800, 800))
-    B = Tkinter.Button(top, text ="Select a directory to start:", command = self.start)
+    top.geometry('{}x{}'.format(600, 600))
+    B = Tkinter.Button(top, text ="Select a directory to inspect:", command = self.start)
     self.var.set('Select a directory to inspect...')
 
     B.pack()
@@ -21,10 +21,8 @@ class Window:
 
   def set_text(self):
     self.var = StringVar()
-    self.frame = Frame(self.top, width=500)
-    self.frame.pack_propagate(0) 
-    self.label = Message(self.top, textvariable=self.var, relief=RAISED)
-    self.label.pack(expand=YES)
+    self.label = Message(self.top, textvariable=self.var, width=600)
+    self.label.pack(fill='x')
 
   def start(self):
     commander = Commander()
