@@ -25,19 +25,6 @@ class Window:
     filemenu.add_command(label="exit", command=self.top.quit)
     menubar.add_cascade(label="Filer", menu=filemenu)
     self.top.config(menu=menubar)
-#     mb=  Menubutton ( self.top, text="menu", relief=RAISED )
-#     mb.grid()
-#     mb.menu  =  Menu ( mb, tearoff = 0 )
-#     mb["menu"]  =  mb.menu
-#     mb.pack()
-#
-#     mb.add_command(label="Quit", command="sys.exit(0)")   
-
-#  
-#     mb.menu.add_checkbutton ( label="look for offenders",
-#                           variable=1 )
-#     mb.menu.add_checkbutton ( label="exit",
-#                               variable="exit()" )
 
 
   def set_top(self, top):
