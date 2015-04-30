@@ -13,19 +13,22 @@ class Window:
     top.geometry('{}x{}'.format(600, 600))
     B = Tkinter.Button(top, text ="Select a directory to inspect:", command = self.start)
     self.var.set('Select a directory to inspect...')
-
+    self.set_scroll()
     B.pack()
     top.mainloop()
 
   def menu(self):
     menubar = Menu(self.top)
-
     filemenu = Menu(menubar, tearoff=0)
     filemenu.add_command(label="todo", command="")
     filemenu.add_command(label="exit", command=self.top.quit)
     menubar.add_cascade(label="Filer", menu=filemenu)
     self.top.config(menu=menubar)
 
+
+  def set_scroll(self):
+    scrollbar = Scrollbar(self.top)
+    scrollbar.pack( side = RIGHT, fill=Y )
 
   def set_top(self, top):
     self.top = top
@@ -39,6 +42,7 @@ class Window:
     commander = Commander()
     text = commander.examine()
     self.var.set(text)
+    self.set_scroll(self.var)
 
 app = Window()
 
