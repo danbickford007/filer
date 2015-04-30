@@ -6,6 +6,7 @@ from Tkinter import *
 class Window:
 
   def __init__(self):
+    self.labels = []
     top = Tkinter.Tk()
     self.set_top(top)
     self.set_text()
@@ -38,11 +39,36 @@ class Window:
     self.label = Message(self.top, textvariable=self.var, width=600)
     self.label.pack(fill='x')
 
+  def clean_labels(self):
+    if self.labels:
+      for index, i in enumerate(self.labels):
+        i.destroy()
+
+  def generate(self, files):
+    self.clean_labels()
+    for index, i in enumerate(files):
+      label=Label(self.top, text=files[index])
+      self.labels.append(label)
+      if files[index]:
+        label.bind("<Button-1>", lambda event, a=files[index]: self.text_callback(a))
+        label.pack()
+
+  def text_callback(self, fileCombo):
+    commander = Commander()
+    path = fileCombo
+    if fileCombo.split('\t').count > 2:
+      path = fileCombo.split('\t')[1]
+    
+    text = commander.examine_by_path(path)
+    files = text.split('\n')
+    self.generate(files)
+
   def start(self):
     commander = Commander()
     text = commander.examine()
-    self.var.set(text)
-    self.set_scroll(self.var)
+    files = text.split('\n')
+    self.generate(files)
+    self.set_scroll()
 
 app = Window()
 
