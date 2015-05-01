@@ -13,13 +13,12 @@ class Window:
     self.set_top(top)
     self.menu()
     top.geometry('{}x{}'.format(600, 600))
+    top.configure(bg='#445566')
     top.mainloop()
 
   def menu(self):
     mainmenu = Mainmenu(self.top)
-    B = Tkinter.Button(self.top, text ="Select a directory to inspect:", command = self.start)
-    B.pack()
-
+    mainmenu.buttons(self);
   def set_top(self, top):
     self.top = top
     self.scrollbar = Scrollbar(self.top)
@@ -55,6 +54,11 @@ class Window:
 
   def start(self):
     text = self.commander.examine()
+    files = text.split('\n')
+    self.generate(files)
+
+  def back(self):
+    text = self.commander.back()
     files = text.split('\n')
     self.generate(files)
 
