@@ -1,6 +1,7 @@
 import Tkinter
 import tkMessageBox
 from commander import Commander
+from mainmenu import Mainmenu
 from Tkinter import *
 
 class Window:
@@ -8,67 +9,54 @@ class Window:
   def __init__(self):
     self.labels = []
     top = Tkinter.Tk()
+    self.commander = Commander()
     self.set_top(top)
-    self.set_text()
     self.menu()
     top.geometry('{}x{}'.format(600, 600))
-    B = Tkinter.Button(top, text ="Select a directory to inspect:", command = self.start)
-    self.var.set('Select a directory to inspect...')
-    self.set_scroll()
-    B.pack()
     top.mainloop()
 
   def menu(self):
-    menubar = Menu(self.top)
-    filemenu = Menu(menubar, tearoff=0)
-    filemenu.add_command(label="todo", command="")
-    filemenu.add_command(label="exit", command=self.top.quit)
-    menubar.add_cascade(label="Filer", menu=filemenu)
-    self.top.config(menu=menubar)
-
-
-  def set_scroll(self):
-    scrollbar = Scrollbar(self.top)
-    scrollbar.pack( side = RIGHT, fill=Y )
+    mainmenu = Mainmenu(self.top)
+    B = Tkinter.Button(self.top, text ="Select a directory to inspect:", command = self.start)
+    B.pack()
 
   def set_top(self, top):
     self.top = top
-
-  def set_text(self):
-    self.var = StringVar()
-    self.label = Message(self.top, textvariable=self.var, width=600)
-    self.label.pack(fill='x')
+    self.scrollbar = Scrollbar(self.top)
+    self.scrollbar.pack( side = RIGHT, fill=Y )
+    self.mylist = Listbox(self.top, yscrollcommand = self.scrollbar.set, width=600 )
 
   def clean_labels(self):
-    if self.labels:
-      for index, i in enumerate(self.labels):
-        i.destroy()
+    index = 0
+    for i in self.fileArray:
+      self.fileArray.delete(index)
+      index += 1
+    self.mylist.delete(0, END)
 
   def generate(self, files):
+    self.fileArray = []
     self.clean_labels()
     for index, i in enumerate(files):
-      label=Label(self.top, text=files[index])
-      self.labels.append(label)
-      if files[index]:
-        label.bind("<Button-1>", lambda event, a=files[index]: self.text_callback(a))
-        label.pack()
+       self.mylist.insert(END, files[index])
+       self.fileArray.append(files[index])
+    self.mylist.bind('<<ListboxSelect>>', lambda event, a=self.mylist: self.text_callback(a))
+    self.mylist.pack( side = LEFT, fill = BOTH )
+    self.scrollbar.config( command = self.mylist.yview )
 
   def text_callback(self, fileCombo):
-    commander = Commander()
+    fileCombo = self.fileArray[int(fileCombo.curselection()[0])]
     path = fileCombo
     if fileCombo.split('\t').count > 2:
       path = fileCombo.split('\t')[1]
     
-    text = commander.examine_by_path(path)
+    text = self.commander.examine_by_path(path)
     files = text.split('\n')
     self.generate(files)
 
   def start(self):
-    commander = Commander()
-    text = commander.examine()
+    text = self.commander.examine()
     files = text.split('\n')
     self.generate(files)
-    self.set_scroll()
 
 app = Window()
 
